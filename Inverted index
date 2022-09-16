@@ -1,0 +1,357 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "collapsed_sections": [],
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/syedanwaar/projects/blob/main/Inverted%20index\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Information retrieval is the process of extracting useful information from unstructured data that satisfies information needs from large collection of data. "
+      ],
+      "metadata": {
+        "id": "RdebuyI8DPAH"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!gdown \"1-qs_ay_wuZa8UkfCiDj17yKtNlcZKTBn\" \n",
+        "!gdown \"1S22_HMJc61ki8DHjxGGwQGI2JKo4_FA1\""
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "7nd34mtnDGKe",
+        "outputId": "7297c1a9-fc94-4eaf-f49c-185ad838ab54"
+      },
+      "execution_count": 27,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Downloading...\n",
+            "From: https://drive.google.com/uc?id=1-qs_ay_wuZa8UkfCiDj17yKtNlcZKTBn\n",
+            "To: /content/files.zip\n",
+            "100% 46.9k/46.9k [00:00<00:00, 89.2MB/s]\n",
+            "Downloading...\n",
+            "From: https://drive.google.com/uc?id=1S22_HMJc61ki8DHjxGGwQGI2JKo4_FA1\n",
+            "To: /content/stop_words.txt\n",
+            "100% 1.51k/1.51k [00:00<00:00, 3.92MB/s]\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!unzip 'files.zip'"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "d_lX5VYFEGPW",
+        "outputId": "db10f279-fb81-4ef5-9279-0602cd15a73b"
+      },
+      "execution_count": 28,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Archive:  files.zip\n",
+            "replace files/29.txt? [y]es, [n]o, [A]ll, [N]one, [r]ename: A\n",
+            "  inflating: files/29.txt            \n",
+            "  inflating: files/15.txt            \n",
+            "  inflating: files/100.txt           \n",
+            "  inflating: files/14.txt            \n",
+            "  inflating: files/28.txt            \n",
+            "  inflating: files/16.txt            \n",
+            "  inflating: files/17.txt            \n",
+            "  inflating: files/13.txt            \n",
+            "  inflating: files/12.txt            \n",
+            "  inflating: files/10.txt            \n",
+            "  inflating: files/38.txt            \n",
+            "  inflating: files/39.txt            \n",
+            "  inflating: files/11.txt            \n",
+            "  inflating: files/76.txt            \n",
+            "  inflating: files/62.txt            \n",
+            "  inflating: files/89.txt            \n",
+            "  inflating: files/88.txt            \n",
+            "  inflating: files/63.txt            \n",
+            "  inflating: files/77.txt            \n",
+            "  inflating: files/49.txt            \n",
+            "  inflating: files/61.txt            \n",
+            "  inflating: files/75.txt            \n",
+            "  inflating: files/74.txt            \n",
+            "  inflating: files/60.txt            \n",
+            "  inflating: files/48.txt            \n",
+            "  inflating: files/64.txt            \n",
+            "  inflating: files/70.txt            \n",
+            "  inflating: files/58.txt            \n",
+            "  inflating: files/59.txt            \n",
+            "  inflating: files/71.txt            \n",
+            "  inflating: files/65.txt            \n",
+            "  inflating: files/73.txt            \n",
+            "  inflating: files/67.txt            \n",
+            "  inflating: files/9.txt             \n",
+            "  inflating: files/98.txt            \n",
+            "  inflating: files/99.txt            \n",
+            "  inflating: files/8.txt             \n",
+            "  inflating: files/66.txt            \n",
+            "  inflating: files/72.txt            \n",
+            "  inflating: files/57.txt            \n",
+            "  inflating: files/5.txt             \n",
+            "  inflating: files/43.txt            \n",
+            "  inflating: files/94.txt            \n",
+            "  inflating: files/80.txt            \n",
+            "  inflating: files/81.txt            \n",
+            "  inflating: files/95.txt            \n",
+            "  inflating: files/42.txt            \n",
+            "  inflating: files/56.txt            \n",
+            "  inflating: files/4.txt             \n",
+            "  inflating: files/68.txt            \n",
+            "  inflating: files/40.txt            \n",
+            "  inflating: files/6.txt             \n",
+            "  inflating: files/54.txt            \n",
+            "  inflating: files/83.txt            \n",
+            "  inflating: files/97.txt            \n",
+            "  inflating: files/96.txt            \n",
+            "  inflating: files/82.txt            \n",
+            "  inflating: files/7.txt             \n",
+            "  inflating: files/55.txt            \n",
+            "  inflating: files/41.txt            \n",
+            "  inflating: files/69.txt            \n",
+            "  inflating: files/45.txt            \n",
+            "  inflating: files/51.txt            \n",
+            "  inflating: files/3.txt             \n",
+            "  inflating: files/79.txt            \n",
+            "  inflating: files/86.txt            \n",
+            "  inflating: files/92.txt            \n",
+            "  inflating: files/93.txt            \n",
+            "  inflating: files/87.txt            \n",
+            "  inflating: files/78.txt            \n",
+            "  inflating: files/50.txt            \n",
+            "  inflating: files/2.txt             \n",
+            "  inflating: files/44.txt            \n",
+            "  inflating: files/52.txt            \n",
+            "  inflating: files/46.txt            \n",
+            "  inflating: files/91.txt            \n",
+            "  inflating: files/85.txt            \n",
+            "  inflating: files/84.txt            \n",
+            "  inflating: files/90.txt            \n",
+            "  inflating: files/47.txt            \n",
+            "  inflating: files/1.txt             \n",
+            "  inflating: files/53.txt            \n",
+            "  inflating: files/34.txt            \n",
+            "  inflating: files/20.txt            \n",
+            "  inflating: files/21.txt            \n",
+            "  inflating: files/35.txt            \n",
+            "  inflating: files/23.txt            \n",
+            "  inflating: files/37.txt            \n",
+            "  inflating: files/36.txt            \n",
+            "  inflating: files/22.txt            \n",
+            "  inflating: files/26.txt            \n",
+            "  inflating: files/32.txt            \n",
+            "  inflating: files/33.txt            \n",
+            "  inflating: files/27.txt            \n",
+            "  inflating: files/31.txt            \n",
+            "  inflating: files/25.txt            \n",
+            "  inflating: files/19.txt            \n",
+            "  inflating: files/18.txt            \n",
+            "  inflating: files/24.txt            \n",
+            "  inflating: files/30.txt            \n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "import re\n",
+        "\n",
+        "StopWords=[]\n",
+        "\n",
+        "with open('stop_words.txt','r') as SW:\n",
+        "    StopWordString=list(SW)[0].split('\\n')[0]\n",
+        "    filteredChars = re.findall(r'\\w+', StopWordString)\n",
+        "    StopWords=filteredChars.copy()\n",
+        "    StopWordsLower = [x.lower() for x in StopWords]\n",
+        "print(StopWordsLower)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "5CpvITk1od2-",
+        "outputId": "91e5d894-5146-4c5b-9662-77b1c905656c"
+      },
+      "execution_count": 29,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "['ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than']\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "ref=dict() \n",
+        "for i in range(1,101):\n",
+        "  with open(f'files/{i}.txt','r') as reviewfile:\n",
+        "    review=list(reviewfile)[0].split('\\n')[0]\n",
+        "    res = re.findall(r'\\w+', review)\n",
+        "    res_without_sw=[]\n",
+        "    for word in res:\n",
+        "       if not word.lower() in StopWordsLower:\n",
+        "         res_without_sw.append(word)\n",
+        "    for word in res_without_sw:\n",
+        "      if word not in ref:\n",
+        "        ref[word]={i}\n",
+        "      else:\n",
+        "        ref[word].add(i)\n",
+        "print(ref)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3n6686VjIN_e",
+        "outputId": "a76b1e9d-e955-4b41-dd84-ca5d057427e6"
+      },
+      "execution_count": 30,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "{'Great': {1, 98, 67, 5, 71, 42, 11, 52, 92, 63}, 'CD': {1, 41, 13, 25, 26}, 'lovely': {1}, 'Pat': {1}, 'one': {1, 2, 6, 7, 14, 16, 18, 22, 23, 28, 31, 33, 34, 39, 48, 51, 53, 55, 56, 61, 68, 69, 73, 85, 87, 89, 90, 91, 97}, 'GREAT': {1}, 'voices': {1}, 'generation': {1}, 'listened': {1}, 'YEARS': {1}, 'still': {32, 1, 2, 65, 97, 6, 71, 79, 16, 51, 23, 92, 62}, 'LOVE': {1}, 'm': {1, 67, 99, 6, 39, 7, 72, 74, 75, 46, 79, 80, 17, 61, 63}, 'good': {1, 97, 67, 90, 73, 43, 44, 14, 47, 83, 23, 57, 58, 95, 31}, 'mood': {1, 66}, 'makes': {1, 68}, 'feel': {1, 68, 10, 47, 20}, 'better': {1, 3, 4, 67, 68, 12, 13, 47, 50, 51, 83, 57}, 'bad': {32, 1, 97, 6, 41, 44, 45, 47, 49, 53, 85}, 'evaporates': {1}, 'like': {1, 2, 7, 22, 27, 31, 32, 33, 40, 47, 53, 54, 56, 59, 62, 63, 68, 69, 79, 81, 86, 90, 92, 99}, 'sugar': {1}, 'rain': {1}, 'oozes': {1}, 'LIFE': {1}, 'Vocals': {1}, 'jusat': {1}, 'STUUNNING': {1}, 'lyrics': {1}, 'kill': {48, 1}, 'One': {1, 2, 98, 74, 62}, 'life': {96, 1, 33, 9, 55, 87, 92}, 'hidden': {1}, 'gems': {1}, 'desert': {1}, 'isle': {1}, 'book': {1, 10, 11, 21, 31, 32, 33, 34, 39, 40, 42, 43, 47, 48, 50, 51, 57, 58, 60, 64, 65, 78, 79, 80, 82, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99}, 'never': {32, 1, 97, 73, 50, 57, 27}, 'made': {1, 100, 37, 39, 76, 14, 53, 57, 91, 95}, 'big': {1, 50, 85, 17}, 'beyond': {40, 1, 33}, 'Everytime': {1}, 'play': {1, 2, 8, 13, 17}, 'matter': {1, 46}, 'black': {1, 74}, 'white': {1}, 'young': {1}, 'old': {1, 35, 13, 18, 53, 62}, 'male': {40, 1}, 'female': {1}, 'EVERYBODY': {1}, 'says': {1, 77}, 'thing': {1, 43, 44, 77, 85}, 'singing': {1}, 'best': {96, 33, 2, 90, 73, 14, 20, 85, 58, 31}, 'game': {2, 13, 17, 18, 63}, 'music': {2, 44}, 'soundtracks': {2}, 'didn': {2, 73, 74, 76, 47, 15, 54, 94}, 'really': {2, 37, 7, 39, 43, 75, 76, 47, 50, 87, 25, 27, 92}, 'Despite': {2}, 'fact': {88, 2, 50, 47}, 'played': {2}, 'small': {96, 2, 71, 72, 75, 76, 53, 55, 24}, 'portion': {2}, 'heard': {2, 20, 53}, 'plus': {2, 44}, 'connection': {2}, 'Chrono': {2}, 'Trigger': {2}, 'great': {2, 10, 18, 20, 27, 34, 41, 43, 52, 60, 63, 69, 71, 73, 90, 91, 92, 96, 97}, 'well': {65, 2, 3, 35, 5, 6, 72, 74, 43, 12, 77, 85, 55, 88, 27, 62, 63}, 'led': {2, 79}, 'purchase': {2, 36, 68, 25, 94}, 'soundtrack': {2}, 'remains': {2}, 'favorite': {2, 39}, 'albums': {2}, 'incredible': {2}, 'mix': {2, 44, 55}, 'fun': {2, 51, 44}, 'epic': {2}, 'emotional': {41, 2}, 'songs': {2, 66}, 'sad': {2}, 'beautiful': {2}, 'tracks': {2}, 'especially': {2, 59, 37}, 'many': {97, 2, 34, 98, 5, 90, 11, 80, 18, 53, 54, 55, 88, 57, 26, 27, 62}, 'kinds': {2}, 'video': {2, 36}, 'must': {96, 2, 83}, 'admit': {2}, 'Life': {2}, 'Distant': {2}, 'Promise': {2}, 'brought': {2, 71}, 'tears': {2, 44}, 'eyes': {2, 42}, 'occasions': {2}, 'complaint': {2, 85}, 'use': {2, 67, 7, 46, 14, 78, 49, 22, 56, 95, 63}, 'guitar': {2, 46}, 'fretting': {2}, 'effects': {2, 5, 46}, 'find': {2, 67, 37, 14, 16, 48, 84, 93, 62}, 'distracting': {2}, 'even': {32, 65, 2, 6, 7, 72, 74, 13, 46, 47, 16, 17, 55}, 'weren': {2}, 'included': {2}, 'would': {2, 3, 7, 15, 25, 30, 39, 43, 44, 48, 49, 53, 54, 62, 64, 65, 74, 79, 80, 82, 85, 89, 92, 94, 95, 97}, 'consider': {2}, 'collection': {2, 66, 5}, 'worth': {64, 2, 44, 18, 94}, 'Batteries': {3}, 'died': {3}, 'within': {3, 28, 69}, 'year': {33, 3, 6, 7, 17, 18}, 'bought': {27, 3, 39}, 'charger': {3, 4}, 'Jul': {3}, '2003': {3}, 'worked': {3, 30}, 'OK': {3}, 'design': {3}, 'nice': {3, 11, 76, 81, 50}, 'convenient': {49, 3}, 'However': {10, 3, 52, 54}, 'batteries': {3, 4}, 'hold': {67, 3, 77}, 'charge': {3, 4}, 'Might': {3, 63}, 'get': {34, 3, 36, 69, 39, 40, 41, 44, 76, 50, 52, 25, 92, 94, 63}, 'alkaline': {3}, 'disposables': {3}, 'look': {3, 68, 71, 47, 81, 53, 94}, 'elsewhere': {3}, 'comes': {25, 10, 3}, 'staying': {3}, 'power': {3, 63, 15}, 'works': {4, 6, 91, 78, 25, 27, 92, 29}, 'fine': {4, 63}, 'Maha': {4}, 'Energy': {4}, 'Check': {4}, 'website': {16, 4}, 'Powerex': {4}, 'MH': {4}, 'C204F': {4}, '100': {4}, 'minutes': {4, 53, 54}, 'rapid': {4}, 'option': {4}, 'slower': {4}, '2200': {4}, 'mAh': {4}, 'non': {5}, 'audiophile': {5}, 'Reviewed': {5}, 'quite': {65, 69, 5, 78, 88}, 'bit': {81, 100, 5}, 'combo': {5}, 'players': {5, 6, 63}, 'hesitant': {5}, 'due': {92, 5}, 'unfavorable': {5}, 'reviews': {98, 77, 5}, 'size': {68, 69, 37, 5, 71, 72, 75, 76}, 'machines': {5}, 'weaning': {5}, 'VHS': {5}, 'want': {32, 65, 34, 5, 72, 12, 29, 30}, 'replace': {5}, 'DVD': {35, 5, 6, 7, 8}, 'unit': {27, 28, 5, 46}, 'built': {72, 5}, 'easy': {67, 69, 5, 17, 24, 88}, 'setup': {5}, 'resolution': {5}, 'special': {8, 82, 5}, 'progressive': {5}, 'scan': {5}, 'HDTV': {5}, 'owners': {5}, 'suitable': {88, 5}, 'people': {66, 98, 99, 5, 43, 53, 54, 57, 90}, 'looking': {67, 5, 74, 10, 42, 77, 88}, 'versatile': {5}, 'product': {67, 68, 5, 69, 71, 72, 73, 74, 100, 76, 14, 16, 22, 27, 28, 30}, 'Cons': {5}, 'universal': {5}, 'remote': {5}, 'Player': {6}, 'crapped': {6}, 'also': {6, 41, 44, 78, 80, 51}, 'began': {62, 49, 52, 6}, 'incorrect': {6}, 'disc': {13, 6}, 'problems': {8, 6, 7}, 've': {6, 43, 13, 21, 89, 63}, 'read': {6, 21, 32, 33, 34, 39, 40, 42, 48, 57, 62, 65, 74, 78, 80, 83, 85, 88, 89, 90, 96, 97, 99}, 'VCR': {6}, 'hte': {6}, 'side': {88, 74, 6}, 'useless': {88, 25, 6}, 'understand': {40, 78, 6}, 'sometimes': {6}, 'quit': {6}, 'sign': {6}, 'quality': {72, 67, 28, 6}, 'giving': {6, 7}, 'JVC': {6, 7}, 'sticking': {6}, 'Sony': {24, 67, 6}, 'another': {6, 79, 16, 48, 56, 57, 94}, 'brand': {94, 13, 6}, 'shot': {6}, 'Incorrect': {7}, 'Disc': {7}, 'love': {33, 65, 70, 39, 7, 41, 45, 14, 47, 18}, 'style': {85, 44, 63, 7}, 'couple': {44, 47, 14, 7}, 'years': {32, 64, 7, 42, 14}, 'doesn': {68, 36, 7, 45, 46}, 'work': {65, 97, 7, 41, 74, 13, 78, 15, 16, 82, 52, 56, 57, 28, 94}, 'anymore': {7}, 'broken': {66, 35, 7}, 'PS2': {7}, 'wouldn': {7}, 'recommend': {7, 72, 10, 11, 44, 50, 86, 28}, 'going': {64, 67, 7, 42, 54, 88, 58, 27, 28}, 'upgrade': {7}, 'recorder': {7}, 'wish': {7, 72, 43, 78, 54, 29, 62}, 'guess': {25, 75, 7}, 'stopped': {7}, 'working': {46, 7}, 'dvd': {45, 7}, 'player': {63, 7}, 'gave': {84, 47, 54, 7}, 'probably': {80, 43, 7}, 'menu': {8}, 'select': {8}, 'cannot': {8}, 'scroll': {8}, 'set': {8, 79}, 'vertically': {8}, 'triangle': {8}, 'keys': {8}, 'horizontally': {8}, 'anything': {64, 67, 8, 74, 94}, 'besides': {8}, 'features': {8}, 'language': {8, 85}, 'nothing': {39, 8, 77, 48, 88, 25, 30}, 'Unique': {9}, 'Weird': {9}, 'Orientalia': {9}, '1930': {9}, 'Exotic': {9}, 'tales': {9}, 'Orient': {9}, 'Dr': {9, 59}, 'Shen': {9}, 'Fu': {9}, 'Tales': {9}, 'magazine': {9, 23}, 'reprint': {9}, 'elixir': {9}, 'grants': {9, 55}, 'immortality': {9}, 'price': {64, 67, 39, 9, 79, 18, 30}, 're': {72, 9, 47, 17, 93}, 'tired': {9}, 'modern': {64, 9}, 'authors': {9, 57}, 'sound': {9}, 'alike': {9}, 'antidote': {9}, 'Owen': {9}, 'palette': {9}, 'loaded': {9}, 'splashes': {9}, 'Chinese': {9}, 'Japanese': {9}, 'colours': {9}, 'Marvelous': {9}, 'ultimate': {10}, 'guide': {88, 10, 71}, 'Firstly': {10}, 'enjoyed': {64, 10, 48, 87, 90}, 'format': {10}, 'tone': {10}, 'author': {33, 65, 97, 40, 10, 78, 79, 48, 88, 57, 90}, 'addressed': {10}, 'reader': {96, 10, 50, 85, 88, 57, 93}, 'imparted': {10}, 'insider': {10}, 'secrets': {10}, 'promised': {10}, 'reveal': {10}, 'starting': {80, 10}, 'research': {10}, 'law': {10}, 'school': {96, 10, 99, 95}, 'know': {65, 34, 98, 40, 10, 43, 91, 47, 17, 25, 27, 60}, 'requirements': {10}, 'admission': {10}, 'may': {10, 75, 78, 80, 22}, 'tremendous': {10}, 'help': {16, 25, 10, 74}, 'done': {10, 26, 77}, 'homework': {10}, 'edge': {10}, 'admissions': {10}, 'topic': {10}, 'specific': {10}, 'books': {32, 39, 10, 43, 47, 48, 80, 50, 93, 57, 59, 61}, 'example': {10}, 'write': {10, 43}, 'personal': {10, 55}, 'statment': {10}, 'geared': {10}, 'specifically': {10}, 'towards': {10, 51, 52}, 'LSAT': {10}, 'preparation': {10}, 'Powerscore': {10}, 'helpful': {88, 10}, 'websites': {10}, 'advice': {16, 10, 62}, 'aiding': {10}, 'individuals': {10}, 'asking': {10}, 'letters': {10}, 'recommendation': {10, 46}, 'Yet': {10}, 'new': {64, 34, 10, 76, 13, 48, 94}, 'entire': {33, 97, 10, 47, 50, 85}, 'affair': {96, 10}, 'definitely': {10, 70}, 'clarify': {10}, 'travelling': {11}, 'Europe': {83, 11, 92}, 'currently': {11}, 'live': {66, 11, 87}, 'visitors': {11}, 'covers': {11}, 'countries': {11}, 'colour': {11}, 'pictures': {67, 11, 70}, 'starter': {11}, 'go': {33, 11, 50, 85, 87}, 'listen': {12, 93, 36}, 'El': {12}, 'Duke': {12}, 'access': {12}, 'shower': {12}, 'gimmick': {12}, 'orchestrated': {12}, 'complete': {13, 82, 18, 88, 29}, 'Bust': {13}, 'requires': {13}, 'quicktime': {13}, '5': {68, 69, 72, 13, 47, 17, 24, 26}, '0': {75, 13}, 'version': {68, 13, 85, 93, 63}, '7': {72, 75, 13, 18, 26}, 'ask': {13, 94}, 'install': {25, 13}, 'available': {65, 57, 13}, 'click': {13}, 'let': {35, 44, 13, 88, 27, 92, 62}, 'begrudgingly': {13}, 'clicked': {13}, 'yes': {13}, 'third': {13}, 'try': {75, 13, 51, 93, 63}, 'installed': {13}, 'tells': {13}, 'please': {13, 47}, 'KEPT': {13}, 'telling': {16, 13}, 'uninstalled': {13}, 'reinstalled': {13}, 'Barbie': {26, 13}, 'Rapunzel': {13}, 'frustrating': {13}, 'absolutely': {88, 13, 14}, 'keeps': {58, 51, 13}, 'tho': {13}, 'installation': {25, 13}, 'process': {13}, 'repeatedly': {73, 13}, 'operating': {13}, 'system': {13}, 'limitations': {13}, 'computer': {13}, 'merely': {13}, 'weeks': {94, 75, 13, 38}, 'state': {13}, 'art': {40, 13}, 'contraptions': {13}, 'TRULY': {14}, 'MADE': {14}, 'DIFFERENCE': {14}, 'using': {29, 14}, 'started': {94, 14, 39}, 'hair': {14}, 'gotten': {16, 62, 29, 14}, 'dry': {81, 14}, 'chemical': {14}, 'treatments': {14}, 'relaxers': {14}, 'actualy': {14}, 'came': {25, 42, 14}, 'relaxer': {14}, 'kit': {14}, 'tried': {33, 69, 72, 14, 84}, 'could': {42, 74, 14, 80, 30}, 'beleive': {14}, 'difference': {70, 14}, 'stores': {37, 14}, 'time': {32, 35, 69, 72, 43, 76, 14, 79, 80, 20, 90, 31}, 'searched': {14}, 'Amazon': {38, 14}, 'moisturizing': {14}, 'used': {25, 14}, 'far': {80, 96, 69, 14}, 'soft': {14}, 'elasticity': {14}, 'breaking': {14}, 'anywhere': {56, 14}, 'close': {62, 50, 14}, 'happy': {24, 75, 14}, 'run': {15}, 'USB': {15}, 'bus': {15}, 'hoping': {48, 15}, 'drive': {46, 15}, 'required': {15}, 'adapter': {15}, 'actually': {16, 43, 78, 15}, 'sent': {16, 42, 30, 15}, 'back': {32, 65, 68, 42, 74, 77, 15, 16, 30}, 'buy': {34, 38, 71, 74, 43, 16, 22}, 'First': {16, 32, 51}, 'company': {16, 30}, 'took': {69, 39, 73, 74, 16}, 'money': {79, 16, 53, 22, 26, 28}, 'email': {16, 94}, 'shipped': {16, 38}, 'week': {16}, 'half': {16, 30}, 'later': {32, 38, 16, 27, 94}, 'received': {16, 76}, 'sorry': {16}, 'items': {16}, 'mistake': {16, 87}, 'finally': {16, 25}, 'got': {74, 16, 80, 81, 84, 53, 29, 94, 63}, 'went': {16, 48, 74, 37}, 'won': {16}, 'phone': {16, 25}, 'though': {16, 32}, 'depicts': {16}, 'numerous': {16, 18}, 'emails': {16}, 'number': {16, 65, 51, 94}, 'kind': {16, 56}, 'response': {16}, 'customer': {16, 94}, 'service': {16, 87}, 'problem': {16, 25}, 'waste': {79, 16, 53, 22, 90}, 'Simple': {17}, 'Durable': {17}, 'Fun': {17}, 'ages': {17, 26}, 'AWESOME': {17}, 'Almost': {17}, 'everyone': {33, 68, 44, 17, 90}, 'tic': {17}, 'tac': {17}, 'toe': {17}, 'EASY': {17}, 'learn': {64, 17}, 'quick': {17, 53, 37}, 'twist': {17, 31}, 'pieces': {17, 69}, 'slightly': {17}, 'different': {17, 83, 68, 93}, 'sizes': {17, 76}, 'enough': {17, 62}, 'gobble': {17}, 'opponent': {17}, 'first': {64, 97, 35, 36, 69, 48, 17, 49, 59, 61, 63}, 'person': {17, 20}, 'make': {32, 17, 53, 54, 85, 25, 27, 95}, 'wins': {17}, 'looks': {17}, 'stuck': {17}, 'mindset': {17}, 'making': {17}, 'three': {39, 47, 17, 30, 94}, 'row': {17, 69}, 'forget': {17}, 'gobbling': {17}, 'possibilities': {17}, '4': {72, 17, 68, 41}, 'olds': {17}, 'beat': {17}, 'trying': {17, 43}, 'win': {17}, 'Excellent': {17, 82}, 'beginning': {17, 59, 52}, 'critical': {17}, 'thinking': {17, 74}, 'Grandparents': {17}, 'loved': {17, 34, 60, 33}, 'playing': {17, 20}, 'kids': {17, 35, 36}, 'Review': {18}, 'Kelly': {18}, 'Club': {18}, 'Toddlers': {18}, '99': {18}, 'PC': {18}, 'WELL': {18}, 'graphics': {18, 26}, 'colorful': {18}, 'lots': {18}, 'four': {18}, 'daughter': {96, 18, 35}, 'tasks': {18}, 'including': {18}, 'dressing': {18}, 'grooming': {18}, 'wide': {18, 51, 79}, 'variety': {18}, 'pets': {18}, 'decoration': {18}, 'floats': {18}, 'show': {18}, 'little': {39, 40, 46, 79, 18, 29}, 'parade': {18}, 'SOY': {19}, 'UN': {19}, 'APASIONADO': {19}, 'DEL': {19}, 'BOX': {19}, 'Y': {19, 53}, 'ESTE': {19}, 'LIBRO': {19}, 'ESTÁ': {19}, 'ESPLÉNDIDO': {19}, 'Lo': {19}, 'disfrutas': {19}, 'lo': {19}, 'puedes': {19}, 'usar': {19}, 'como': {19}, 'obra': {19}, 'de': {40, 19}, 'consultaNos': {19}, 'trae': {19}, 'LAS': {19}, 'HISTORIA': {19}, 'DE': {19}, 'LOS': {19}, 'BOXEADORES': {19}, 'MÁS': {19}, 'BRILLANTES': {19}, 'CAMPEONES': {19}, 'DURANTE': {19}, 'CIEN': {19}, 'AÑOS': {19}, 'Si': {19}, 'te': {19}, 'gusta': {19}, 'el': {19}, 'box': {19}, 'TE': {19}, 'LO': {19}, 'PIERDAS': {19}, 'fiddle': {20}, 'long': {51, 20, 85, 84, 88, 90}, 'excellent': {58, 20, 95, 39}, 'album': {20}, 'Ryan': {20}, 'amazing': {70, 20, 46}, 'watch': {35, 20, 44}, 'plays': {20}, 'emotion': {20}, 'puts': {20, 85}, 'song': {20}, 'Long': {21}, 'boring': {97, 52, 21}, 'much': {70, 72, 47, 48, 81, 83, 21, 86, 55, 56, 27}, 'expectation': {21}, 'Dont': {22}, 'smells': {22}, 'open': {51, 22}, 'package': {22}, 'appears': {51, 22}, 'gel': {22}, 'cushions': {22}, 'leaks': {22}, 'spent': {22}, '10': {97, 22}, 'havent': {22}, 'worn': {22}, 'wouldnt': {22}, 'something': {32, 69, 74, 77, 48, 80, 50, 22, 25}, 'able': {90, 69, 22, 71}, 'last': {34, 39, 72, 47, 23}, 'series': {39, 47, 50, 51, 23}, 'collect': {61, 23}, 'condition': {42, 23}, 'usual': {23}, 'high': {95, 63, 71, 23}, 'standard': {23}, 'articles': {23}, 'photos': {23}, 'Victoria': {23}, 'come': {92, 23}, 'represent': {23}, 'collected': {23}, 'previous': {23}, 'magazines': {23}, 'enjoy': {50, 44, 90, 23}, 'leafing': {23}, 'rainy': {23}, 'day': {64, 74, 96, 23}, 'Hi8': {24}, 'Camcorder': {24}, '2': {35, 68, 69, 72, 79, 86, 24, 25, 94}, 'LCD': {24}, 'believe': {32, 71, 79, 80, 54, 24, 27, 62}, 'camcorder': {24}, 'light': {40, 27, 24, 88, 29}, 'handle': {24}, 'clear': {24, 95}, 'bright': {24, 88}, 'Ease': {24}, 'operation': {24}, 'Take': {25}, 'Chance': {25, 39}, 'Get': {25}, 'SE': {25}, 'Branded': {25}, 'Cable': {25}, 'data': {65, 25}, 'cable': {25, 53}, 'need': {25, 85, 53}, 'receive': {25, 76}, 'real': {33, 70, 75, 53, 25, 58}, 'directions': {25}, 'information': {25, 37}, 'regarding': {25}, 'check': {40, 25}, 'directed': {25}, 'downloaded': {25}, 'files': {25}, 'site': {25}, '70MB': {25}, 'dial': {25}, 'user': {25}, 'guides': {25}, 'Everything': {25}, 'seemed': {25, 57}, 'ok': {25, 86}, 'recognized': {25}, 'scoured': {25}, 'troubleshooting': {25}, 'info': {25}, 'branded': {25}, 'hope': {25, 34, 57}, 'figure': {25, 69}, 'full': {25}, 'days': {25, 30}, 'beating': {25}, 'head': {25}, 'wall': {25, 28}, 'threw': {25}, 'trash': {25}, 'brain': {25}, 'paid': {25, 94}, 'extra': {25}, 'software': {25}, 'support': {25}, 'along': {25}, 'deal': {25, 39}, 'Yep': {25}, 'breeze': {25}, 'beautifully': {25}, 'pay': {25, 30}, 'Waste': {26}, 'Like': {32, 41, 26}, 'Roms': {26}, 'playtime': {26}, 'limited': {26, 90}, 'averaging': {26}, 'mins': {26, 69}, 'two': {26, 39, 47, 90, 27}, 'daughters': {26}, 'movies': {26}, 'poorly': {26}, 'item': {27, 77}, 'connect': {27}, 'strobe': {27}, 'functions': {27}, 'sure': {99, 69, 39, 74, 27}, 'range': {27, 28}, 'claimed': {27, 78}, 'everything': {27, 85, 63, 55}, 'manufacturer': {73, 27}, 'claims': {27}, 'variables': {27}, 'say': {27, 73, 74, 77, 54, 59}, 'neighbors': {27}, 'house': {27, 28}, 'garage': {27}, 'least': {33, 42, 27}, '40': {64, 27, 53}, 'thru': {27, 46}, 'buildings': {27}, 'noise': {27}, 'night': {39, 41, 74, 27, 31}, 'simply': {43, 27, 79}, 'press': {27}, 'button': {27}, 'Range': {28}, 'suppose': {28}, 'sit': {97, 28, 36, 68}, 'room': {28, 29, 78}, 'line': {50, 83, 28, 53}, 'sight': {28}, 'device': {28}, 'lamp': {28, 29}, 'etc': {43, 28, 29}, 'plugged': {28}, 'control': {28}, 'might': {98, 28, 69, 55}, 'Maybe': {28}, 'completely': {57, 28}, 'stated': {28}, 'basic': {28}, 'separating': {28}, 'unreliable': {28}, 'd': {35, 72, 43, 94, 28, 62}, 'spending': {28}, 'touch': {28, 45, 55}, 'getting': {51, 28, 68, 47}, 'higher': {28}, 'sooner': {29}, 'ive': {29}, 'corner': {29}, 'behind': {29}, 'desk': {29}, 'thats': {80, 29}, 'pain': {92, 29}, 'arse': {29}, 'turn': {29}, 'month': {29}, 'perfectly': {29, 30}, 'added': {29}, 'velcro': {29}, 'switch': {29}, 'ever': {96, 97, 100, 43, 89, 91, 60, 29, 62}, 'shelf': {29}, 'Three': {30}, 'Days': {30}, 'Use': {30}, 'Broke': {69, 30}, 'disappointed': {65, 39, 76, 57, 30}, 'exactly': {88, 44, 30}, 'resuscitated': {30}, 'inexpensive': {46, 30}, 'ship': {49, 30}, 'exchange': {76, 30}, 'inquiry': {30}, 'satisfaction': {30}, 'mentoins': {31}, 'anyone': {97, 67, 60, 31}, 'vampire': {31}, 'knows': {55, 31}, 'Well': {50, 39, 31}, 'anyway': {31}, 'idea': {73, 68, 31}, 'soulmate': {31}, 'crazed': {31}, 'werewolf': {31}, 'crush': {31}, 'P': {31}, 'think': {33, 99, 69, 41, 48, 80, 86, 92, 31}, 'story': {96, 34, 99, 40, 80, 50, 83, 52, 95, 62, 31}, 'anone': {31}, 'part': {76, 79, 54, 31}, 'world': {33, 51, 31}, 'Mary': {32, 33, 34}, 'Ash': {32, 33, 34}, 'reviewed': {32}, '13': {32}, 'lot': {32, 57, 44, 77}, 'girls': {32}, 'wanting': {32}, 'mysterious': {32}, 'boyfriend': {32}, 'believed': {32}, 'soul': {32}, 'mates': {32}, 'drug': {32}, 'Rereading': {32}, 'stands': {32}, 'test': {32}, 'boy': {32}, 'parents': {32, 36}, 'stay': {32}, 'away': {32, 49, 40, 43}, 'seems': {32, 51, 40, 43}, 'jerk': {32}, 'wanna': {32}, 'root': {32}, 'Tha': {33}, 'BOMB': {33}, 'L': {33}, 'J': {33}, 'Smith': {33}, 'whole': {33, 85}, 'ago': {33, 42}, 'stop': {33}, 'reading': {33, 39, 40, 47, 79, 50, 88, 57, 59, 93}, 'sweet': {33}, 'Night': {33}, 'World': {33}, 'seris': {33}, 'bomb': {33}, 'mostly': {33}, 'Smiths': {33}, 'awesome': {33, 51}, 'Lynetee': {33}, 'sweetest': {33}, 'soulmates': {33}, 'fight': {33}, 'feelings': {33}, 'couldn': {33, 93}, 'guys': {33, 41}, 'Quinn': {33}, 'Juliun': {33}, 'Damon': {33}, 'Gabriel': {33}, 'forever': {33}, 'll': {81, 33, 70, 79}, 'hooked': {33, 61}, 'BEST': {33}, 'times': {41, 34, 44, 74}, 'soon': {34, 60}, 'copy': {34, 42}, 'fell': {34}, 'apart': {34, 35}, 'follow': {34}, 'Lynette': {34}, 'together': {34}, 'nonstop': {35}, 'arriving': {35}, 'loving': {35}, 'alternate': {35}, 'purchased': {49, 67, 35, 74}, 'keep': {35, 36, 73, 49, 50}, 'sanity': {35}, 'created': {66, 35, 60}, 'Thomas': {35, 36}, 'fan': {41, 35, 53}, '3': {35}, '1': {80, 35, 79}, 'yr': {35}, 'expected': {36}, 'children': {36}, 'easily': {36}, 'bored': {36, 84}, 'thought': {66, 98, 36, 69, 75, 62}, 'several': {74, 99, 36, 95}, 'episodes': {36}, 'LOT': {36}, 'talking': {36}, 'attention': {57, 36}, 'kid': {36, 85}, 'wants': {43, 36}, 'bunch': {36}, 'hopefully': {40, 36}, 'next': {58, 51, 36}, 'shows': {72, 36, 87}, 'less': {36, 70, 47, 48, 55}, 'Wonderful': {37, 55}, 'online': {37}, 'Dockers': {37}, 'Khaki': {37}, 'pants': {37, 38}, 'husband': {92, 37}, 'wears': {37}, 'hard': {56, 62, 37, 46}, 'impressed': {59, 37}, 'selection': {37}, 'thrilled': {37}, 'without': {67, 37, 42, 43, 56}, 'taken': {37}, 'length': {37}, 'delivery': {37}, 'Christmas': {37}, 'appreciate': {37}, 'effort': {98, 37}, 'send': {37, 46}, 'us': {37, 47}, 'selections': {37}, 'chose': {88, 37}, 'Doublecharged': {38}, 'shipping': {38}, 'merchant': {38}, 'backordered': {38}, 'Merchant': {38}, 'stock': {38}, 'second': {64, 97, 38}, 'pair': {38}, 'charged': {38}, '9': {74, 38}, 'vendors': {38}, 'Book': {42, 39}, 'finished': {39}, 'Food': {39}, 'Love': {39}, 'Anthony': {39}, 'Capella': {39}, 'since': {64, 70, 39}, 'Mind': {39}, 'pastimes': {39}, 'recently': {67, 51, 39}, 'picked': {76, 39}, 'Waterstones': {39}, 'London': {39}, 'British': {39}, 'equivalent': {39}, 'Barnes': {39}, 'Noble': {39}, 'wasn': {64, 69, 39, 77, 49, 54}, 'interested': {39}, 'interesting': {97, 92, 39}, 'options': {39}, 'glad': {39}, 'right': {68, 39, 72, 43, 63}, 'choice': {83, 68, 39}, 'haven': {39}, 'put': {98, 70, 39, 40, 71, 50, 53}, 'food': {39}, 'romance': {89, 47, 39}, 'fond': {39}, 'Mr': {80, 39}, 'remarkably': {39}, 'thorough': {39}, 'description': {45, 39}, 'rich': {39}, 'textured': {39}, 'Italian': {40, 39}, 'dishes': {39}, 'words': {88, 90, 39}, 'assails': {39}, 'sense': {39}, 'smell': {81, 39}, 'taste': {39}, 'leaves': {88, 39}, 'hungry': {39}, 'surprise': {39}, 'Light': {40}, 'substance': {40, 41}, 'clichéd': {40}, 'storyline': {40, 85}, 'based': {40, 75, 77}, 'classic': {40}, 'Cyrano': {40}, 'Bergerac': {40}, 'reads': {40, 79}, 'rookie': {40}, 'novel': {40, 79, 48, 59, 92, 61, 62}, 'written': {97, 40, 43, 57, 91}, 'someone': {40, 43}, 'knowledge': {40, 90, 62}, 'passion': {40, 47}, 'culture': {40, 92}, 'cuisine': {40}, 'experience': {40}, 'developing': {40}, 'Bruno': {40, 53}, 'cooking': {40}, 'clue': {40}, 'Laura': {40}, 'primarily': {40}, 'blonde': {40}, 'American': {40, 96}, 'exotic': {40}, 'character': {96, 40, 79, 50, 92}, 'underdeveloped': {40}, 'studying': {40}, 'history': {40}, 'enjoys': {40}, 'Tomasso': {40}, 'cliché': {40}, 'sexed': {40}, 'Mediterranean': {40}, 'encounters': {40}, 'foreign': {40}, 'females': {40, 48}, 'entertaining': {40}, 'reasons': {40}, 'walk': {40}, 'said': {40, 75, 60, 85}, 'however': {40, 49, 97}, 'recent': {40}, 'novels': {40, 48, 83, 59, 62}, 'seem': {40, 65}, 'way': {96, 40, 72, 44, 76, 78, 51, 84, 85}, 'technical': {40}, 'details': {40, 95}, 'storytelling': {40}, 'caught': {40}, 'WeiB': {41}, 'FOREVER': {41}, 'Kreuz': {41}, 'anime': {41}, 'awsome': {41}, 'bout': {41}, 'hhhooottt': {41}, 'flower': {41}, 'shop': {41}, 'White': {41, 63}, 'Hunters': {41}, 'Byce': {41}, 'assasins': {41}, 'hunt': {41}, 'tomorrow': {41}, 'Bad': {41}, 'police': {41}, 'cant': {41}, 'teens': {41}, 'start': {80, 41, 100}, 'blowing': {41}, 'flames': {41}, 'public': {41}, 'reason': {88, 41, 47}, 'strange': {41}, 'gas': {41}, 'w': {41}, 'instant': {41, 46}, 'contact': {41}, 'ingulfs': {41}, 'object': {41}, 'couldnt': {41}, 'resist': {41}, 'Cd': {41}, 'Anime': {41}, 'see': {41, 50, 51, 74}, 'unacceptable': {42}, 'forward': {88, 42}, 'receiving': {42}, 'New': {97, 42}, 'Orleans': {42}, 'Antoine': {42}, 'restaurant': {42}, 'thirty': {42}, 'wanted': {72, 42, 76, 47, 49, 57}, 'dust': {42, 82}, 'jacket': {42}, 'musty': {42}, 'watering': {42}, 'expense': {42}, 'date': {48, 42}, 'refund': {42}, 'Real': {43}, 'HTML': {43}, 'build': {43}, 'sites': {43}, 'living': {43}, 'struggle': {43}, 'trivialize': {43}, 'present': {43}, 'syntax': {43}, 'willy': {43}, 'nilly': {43}, 'seen': {51, 43}, 'builds': {43}, 'professionally': {43}, 'markup': {43}, 'explains': {43}, 'logical': {43}, 'physical': {43}, 'tagging': {43}, 'styles': {43}, 'job': {97, 43, 77}, 'showing': {43}, 'hook': {72, 43, 69}, 'technologies': {43}, 'teach': {43}, 'CGI': {43}, 'CSS': {43}, 'guy': {43, 47}, 'JavaScript': {43}, 'DHTML': {43}, 'Marriage': {44}, 'moments': {66, 44}, 'tear': {44}, 'jerker': {44}, 'mixed': {44}, 'humor': {44}, 'rough': {44}, 'patches': {44}, 'scare': {44}, 'movie': {100, 44, 79, 53, 54, 57, 60}, 'often': {44}, 'hopeless': {44}, 'romantic': {44}, 'thoroughly': {44}, 'dancing': {44}, 'Hindi': {44}, 'Pop': {44}, 'Rock': {44}, 'wading': {90, 44}, 'parts': {58, 44}, 'ends': {73, 44}, 'typical': {44}, 'relationship': {44}, 'type': {88, 44, 46}, 'case': {44}, 'Amazing': {45}, 'mention': {88, 45}, 'subtitles': {45}, 'Leslie': {46}, 'nutshell': {53, 46}, 'Danelectro': {46}, 'DJ': {46}, '20C': {46}, 'Rocky': {46}, 'Road': {46}, 'Spin': {46}, 'Speaker': {46}, 'Mini': {46}, 'Effects': {46}, 'Pedal': {46}, 'pedal': {46}, 'keyboards': {46}, 'Using': {46}, 'Keyboards': {46}, 'organ': {46}, 'mode': {46}, 'jazz': {46}, 'rock': {46}, 'gives': {46}, 'controllable': {46}, 'includes': {46}, 'fast': {46}, 'slow': {100, 46}, 'ramp': {46}, 'boost': {46}, 'volume': {65, 46}, 'mixer': {46}, 'stereo': {46}, 'stuff': {46}, 'drawback': {46}, 'found': {84, 46, 63}, 'buttons': {46}, 'engage': {46}, 'disengage': {46}, 'modify': {46}, 'springs': {46}, 'possible': {46}, 'maybe': {68, 46}, 'Romance': {47}, 'Please': {47}, 'Less': {47}, 'Mystery': {47}, 'stars': {90, 47}, 'usually': {47}, 'give': {47, 90, 59, 93, 63}, 'ms': {47}, 'feehan': {47}, 'b': {47}, 'c': {47}, 'tooooooo': {47}, 'mystery': {89, 55, 47}, 'gothic': {47}, 'genre': {55, 47}, 'rather': {49, 47}, 'main': {88, 92, 96, 47}, 'characters': {96, 47, 50, 51, 57, 59}, 'almost': {47}, 'entirely': {47}, 'heroine': {47}, 'point': {97, 99, 73, 47, 90}, 'view': {82, 47}, 'sick': {47}, 'whining': {47}, 'unlike': {47}, 'dark': {47}, 'didnt': {86, 47}, 'suited': {47}, 'chapter': {64, 97, 88, 47}, 'unforseen': {47}, 'villain': {47}, 'confesses': {47}, 'pages': {97, 79, 80, 47, 85}, 'throughout': {47}, 'kept': {47}, 'suspense': {47}, 'Ms': {48, 47}, 'Feehan': {48, 47}, 'focuse': {47}, 'relation': {52, 47}, 'distract': {47}, 'unamusing': {47}, 'Lost': {48}, 'Author': {48, 80}, 'Carpathian': {48}, 'except': {48}, 'EVER': {48}, 'gets': {48, 90}, 'resolved': {48, 69}, '16': {48}, 'obstacle': {48}, 'introduced': {48}, 'shoot': {48}, 'Jaguar': {48}, 'Line': {48}, 'curse': {48}, 'origins': {48}, 'males': {48}, 'Nothing': {48, 97}, 'word': {48, 98}, 'walls': {48}, 'ceilings': {48}, 'change': {48, 83}, 'Ideas': {48}, 'left': {74, 79, 48, 49, 57, 59}, 'tagent': {48}, 'become': {48}, 'meaty': {48}, 'expensive': {48, 69}, 'buying': {48}, 'shame': {48, 64, 96}, 'Okay': {49}, 'Messy': {49}, 'bag': {49}, 'vacation': {49}, 'taking': {49}, 'cruise': {49}, 'carry': {49}, 'faux': {49}, 'leather': {49}, 'peeling': {49}, 'became': {49}, 'annoying': {49}, 'flaking': {49}, 'skin': {49}, 'clothes': {49}, 'cloth': {49}, 'wisking': {49}, 'Patricia': {50, 59, 58}, 'Cornwell': {50, 59, 58, 61}, 'turned': {50}, 'somebody': {50}, 'Kay': {50, 51}, 'Scarpetta': {50, 59, 61, 62}, 'concept': {50}, 'returning': {88, 50}, 'develop': {50, 51}, 'allows': {50}, 'comfortable': {50, 67}, 'frustrated': {50}, 'highly': {50, 67}, 'Best': {51}, 'Four': {51}, 'always': {73, 51, 53}, 'Marino': {51}, 'heading': {51}, 'sort': {73, 51}, 'heart': {51}, 'attack': {51}, 'Lucy': {51, 62}, 'quixotic': {51, 85}, 'finds': {51}, 'smack': {51}, 'middle': {72, 51}, 'gruesome': {51}, 'killings': {51}, 'executed': {51}, 'murderer': {51}, 'autopsy': {51}, 'table': {51}, 'around': {74, 51, 55}, 'committing': {51}, 'crimes': {51}, 'murders': {51}, 'occur': {51}, 'fingerprints': {51}, 'turning': {51, 54}, 'Benton': {51}, 'track': {51}, 'killer': {51, 62}, 'corruption': {51}, 'goes': {51}, 'ways': {83, 51}, 'political': {64, 51}, 'stratosphere': {51}, 'taut': {51}, 'totally': {51}, 'believable': {51}, 'thriller': {51}, 'wait': {51, 61}, 'ended': {74, 51}, 'installment': {51}, 'Beginning': {52}, 'poor': {52}, 'ending': {52, 62, 79}, 'Parricia': {52}, 'Corwell': {52}, 'Cruel': {52}, 'Unusual': {52}, 'breathtaking': {52}, 'family': {52, 62, 55}, 'dedication': {52}, 'exeptional': {52}, 'end': {58, 59, 52, 63}, '12': {53}, 'O': {53}, 'Potty': {53}, 'Humor': {53}, 'somethings': {53}, 'comedy': {53}, 'Saw': {53}, 'felt': {74, 53}, 'compelled': {53}, 'warn': {74, 53}, '144': {53}, 'agonizing': {53}, 'lives': {53}, 'clever': {53}, 'jokes': {100, 53, 54}, 'liners': {53}, 'watching': {53}, 'King': {53}, 'Queens': {53}, 'SERIOUSLY': {53}, 'FOLKS': {53}, 'BAD': {53}, '23': {53}, 'references': {53}, 'jewish': {53}, 'penises': {53}, 'Thought': {53}, 'Sandler': {53, 54}, 'clearly': {53}, 'Adam': {53, 54}, 'rent': {53}, 'jumped': {53}, 'script': {97, 53}, 'cash': {53}, 'RAN': {53}, 'else': {67, 80, 81, 53, 88, 57}, 'plot': {83, 53, 62}, 'include': {53}, 'Seth': {53}, 'Rogan': {53}, 'writing': {80, 53}, 'things': {53}, 'perspective': {53}, 'film': {53}, 'Casablanca': {53}, 'known': {54}, 'Judd': {54}, 'Apatow': {54}, 'mean': {80, 54}, 'hate': {54}, 'seeing': {64, 57, 54}, 'previews': {54}, 'theater': {54}, 'hopeful': {54}, 'chance': {54, 63}, 'loses': {54}, 'true': {97, 54}, 'premise': {54}, 'depth': {54}, 'amongst': {54}, 'terrible': {54}, 'crude': {54}, '30': {54}, 'constant': {54}, 'barrage': {54}, 'pathetic': {54}, 'behavior': {54}, 'relate': {54}, 'Disappointing': {54}, 'baffling': {55}, 'rabbi': {55}, 'course': {55}, 'learned': {55}, 'devout': {55}, 'schooling': {55}, 'causes': {92, 55}, 'nervousness': {55}, 'cat': {55}, 'becomes': {55}, 'fantastical': {55}, 'human': {82, 87, 55}, 'speech': {55}, 'visit': {55}, 'abroad': {55}, 'captures': {96, 55}, 'distrust': {55}, 'alien': {55}, 'insular': {55}, 'towners': {55}, 'summon': {55}, 'monotonous': {55}, 'drama': {96, 55}, 'unfolds': {55}, 'loves': {76, 55}, 'losses': {55}, 'changes': {55}, 'ride': {55}, 'Comics': {55}, 'moved': {55}, 'past': {92, 61, 55}, 'BamPow': {55}, 'idioms': {55}, 'border': {55}, 'chick': {55}, 'lit': {55}, 'reality': {55}, 'fantasy': {55}, 'remain': {55}, 'negotiable': {55}, 'deep': {90, 55}, 'devotions': {55}, 'deeper': {55}, 'shallower': {55}, 'ones': {55}, 'ragged': {55}, 'lines': {79, 71, 55}, 'comic': {55}, 'wiredweird': {55}, 'grill': {56}, 'fits': {56, 68}, 'snugly': {56}, 'Disappointment': {57}, 'extreme': {57}, 'knew': {57}, 'opportunity': {57}, 'screen': {57}, 'mess': {57}, 'pray': {57}, 'extremely': {57, 71}, 'unrealistic': {57}, 'fails': {57}, 'capture': {57}, 'points': {57}, 'engrossed': {57}, 'struggling': {57}, 'whether': {57}, 'pick': {57}, 'bothered': {57}, 'strong': {57, 85}, 'sympathetic': {57}, 'draw': {57}, 'dull': {57}, 'overall': {57, 63}, 'scope': {57}, 'Potter': {58}, 'Field': {58}, 'descriptions': {58}, 'page': {58}, 'turner': {58}, 'wondering': {58}, 'happen': {58, 69}, 'beggining': {58}, 'Engrossing': {59}, 'Chilling': {59}, 'Read': {59, 78}, 'foray': {59}, 'intense': {59}, 'realistic': {59}, 'concern': {59}, 'evil': {59}, 'Temple': {59}, 'Gault': {59}, 'vague': {59}, 'decide': {59, 68}, 'trail': {59}, 'gifts': {59}, 'Needless': {59}, 'mentioned': {60}, 'publisher': {60}, 'Simply': {61}, 'Awesome': {61}, 'months': {61}, 'managed': {65, 61}, 'dive': {61}, 'summer': {88, 61}, 'suspensful': {61}, 'Predictable': {62}, 'lame': {62}, 'worst': {97, 62}, 'Cause': {62}, 'Death': {62}, 'rt': {62}, 'predictable': {83, 62}, 'nauseating': {62}, 'die': {62}, 'overly': {90, 62}, 'materialistic': {62}, 'self': {75, 62}, 'righteous': {62}, 'gripes': {62}, 'crime': {62}, 'agencies': {62}, 'media': {62}, 'zero': {62}, 'serial': {62}, 'background': {62}, 'members': {62}, 'twin': {62}, 'sister': {62}, '1st': {62}, 'Black': {63}, 'Knight': {63}, 'C2C': {63}, 'Heat': {63}, 'Squash': {63}, 'Racquet': {63}, 'racquet': {63}, 'hitter': {63}, 'Generating': {63}, 'Difficulty': {63}, 'volleyball': {63}, 'balanced': {63}, 'maneuvered': {63}, 'factory': {63}, 'grip': {63}, 'although': {69, 63}, 'distinct': {63}, 'ridges': {63}, 'Others': {63}, 'prefer': {63}, 'smooth': {72, 68, 63}, 'May': {63}, 'Come': {63}, 'sale': {63}, 'prices': {63}, 'racquets': {63}, 'reputation': {63}, 'durability': {63}, 'plenty': {65, 79, 63}, 'replacement': {63}, 'Note': {63}, 'D': {63}, 'level': {90, 63}, 'Immediately': {63}, 'Howeve': {63}, 'improved': {63}, 'switched': {63}, 'Bandit': {63}, 'success': {63}, 'beginner': {63}, 'intermediate': {63}, 'advanced': {63}, 'Benefit': {63}, 'historical': {64}, 'gem': {64}, 'whose': {64}, 'title': {64}, 'obscures': {64}, 'intent': {64}, 'Started': {64}, 'laughing': {64}, 'realized': {64}, 'obviously': {64}, 'miracle': {64}, 'survived': {64}, '65': {64}, 'published': {64}, 'pending': {64}, 'insolvency': {64}, 'US': {64}, 'loudly': {64}, 'shouted': {64}, 'quotes': {64}, 'extremes': {64}, 'Kudos': {64}, 'whoever': {64}, 'owns': {64}, 'copyright': {64}, 'economics': {64, 65}, 'action': {64, 97, 79}, 'Vastly': {65}, 'overrated': {65}, 'fiction': {65}, 'sorely': {65}, 'vapid': {65}, 'smarmy': {65}, 'demogoguery': {65}, 'Sure': {65}, 'Google': {65}, 'searching': {65}, 'crunching': {65}, 'laptops': {65}, 'economic': {65}, 'circumvent': {65}, 'Probably': {65}, 'greatest': {65}, 'failing': {65}, 'compare': {65}, 'field': {65}, 'sciences': {65}, 'Even': {65}, 'today': {65}, 'analytical': {65}, 'resources': {65}, 'economists': {65}, 'map': {65}, 'predictions': {65}, 'conclusions': {65, 78}, 'hand': {80, 65}, 'meteorologists': {65}, 'Naturally': {65}, 'radical': {65}, 'libertarians': {65}, 'tea': {65}, 'baggers': {65}, 'Republicans': {65}, 'slim': {65, 74}, 'slimmer': {65}, 'evidence': {65}, 'lunatic': {65}, 'fringe': {65}, 'nutty': {65}, 'irrational': {65}, 'sergeant': {66}, 'frosts': {66}, 'lonely': {66}, 'hearts': {66}, 'club': {66}, 'band': {66}, 'edith': {66}, 'venue': {66}, 'exorcise': {66}, 'melancholic': {66}, 'memories': {66}, 'painful': {66}, 'melodies': {66}, 'disguises': {66}, 'lonesome': {66}, 'guitars': {66}, 'medicinal': {66}, 'piano': {66}, 'radiate': {66}, 'spirits': {66}, 'writes': {66, 78}, 'ballads': {66}, 'definite': {66}, 'reminders': {66}, 'unbearable': {66}, 'gray': {66}, 'sky': {66}, 'secluded': {66}, 'isolating': {66}, 'tunes': {66}, 'envision': {66}, 'ironical': {66}, 'pace': {66}, 'chicago': {66}, 'millions': {66}, 'sings': {66}, 'stark': {66}, 'loneliness': {66}, 'Camera': {67}, 'camera': {67}, 'satisfied': {67}, 'digital': {67}, 'controls': {67}, 'reccomend': {67}, 'top': {72, 67, 68, 77}, 'affordable': {67}, 'Nice': {67}, 'return': {68}, 'sizing': {68, 76}, 'perfect': {68, 77}, 'medium': {72, 68, 71}, '137': {68}, 'lbs': {72, 68}, 'baby': {68}, 'gained': {72, 68}, '35': {68}, 'pregnancy': {75, 68}, 'keepin': {68}, 'mind': {90, 68, 78}, 'fat': {72, 68, 77}, 'distributions': {68}, 'bodies': {68}, 'post': {75, 68}, 'pushed': {68}, 'boobs': {68}, 'shape': {68}, 'wear': {96, 68, 74, 77, 92}, 'crunched': {68}, 'bent': {68}, 'Squeem': {72, 68}, 'vest': {68}, 'coverage': {68}, 'easier': {68}, 'squeeze': {68, 70}, 'lay': {68}, 'bed': {68}, 'suck': {68}, 'guts': {68}, '2nd': {69}, 'wore': {74, 69}, 'provided': {69}, 'fit': {76, 69}, 'max': {69}, 'difficult': {69, 71}, 'isn': {72, 88, 69}, 'particularly': {69}, 'either': {69}, 'hours': {74, 69}, 'period': {69}, 'metal': {73, 69}, 'boning': {69}, 'popped': {69}, 'hanging': {69}, 'bottom': {72, 73, 69}, 'snug': {69}, 'correct': {69, 94}, 'squeem': {73, 74, 70}, 'immediately': {73, 70}, 'tell': {70}, 'improves': {70}, 'posture': {70}, 'eat': {70}, 'squeezes': {70}, 'outta': {70}, 'uncomfortable': {72, 70}, 'Product': {71}, 'friend': {71}, 'recommended': {71}, 'flatten': {71}, 'tummy': {71}, 'dress': {72, 76, 71}, 'according': {71}, 'measurement': {71}, 'needed': {71}, 'assistance': {71}, 'contract': {71}, 'core': {71}, 'meant': {71}, 'smaller': {71}, 'waist': {72, 77, 71}, 'sits': {71}, 'torso': {71}, 'ordering': {72}, 'larger': {72}, 'regular': {72}, 'ordered': {72, 74, 75, 94}, 'shaper': {72}, 'general': {72}, '6': {72}, 'weigh': {72}, '120lbs': {72}, 'winter': {72}, 'ate': {72}, 'cheese': {72}, 'complain': {72, 77}, 'roll': {72}, 'belly': {72}, 'slinky': {72}, 'hips': {72}, 'large': {72}, 'instead': {72, 74}, 'hooking': {72}, 'instructed': {72}, 'tight': {72}, 'lower': {72}, 'finish': {72, 79}, 'similar': {72}, 'exceptionally': {72}, 'stitched': {72}, 'WASTE': {73}, 'MONEY': {73}, 'inner': {73}, 'rods': {73}, 'poking': {73}, 'construction': {73}, 'compresses': {73}, 'stomach': {73, 74, 77}, 'spines': {73}, 'bend': {73}, 'protrude': {73}, 'sew': {73}, 'spine': {73}, 'developed': {73}, 'crack': {73}, 'poked': {73}, 'scraped': {73}, 'washed': {73, 74}, 'washing': {73}, 'machine': {73}, 'handwashed': {73}, 'take': {73, 74, 77}, 'care': {73}, 'CAUSES': {74}, 'BRUISING': {74}, 'BLISTERS': {74}, 'WORN': {74}, 'LONG': {74}, 'jeans': {74}, 'underneath': {74}, 'dresses': {74}, 'occasionally': {74}, 'home': {74}, 'sore': {74}, 'sides': {74}, 'coworkers': {74}, 'drinks': {74}, 'keeping': {74}, '14hours': {74}, 'normal': {74}, 'blisters': {74}, 'bruising': {74}, 'marks': {74}, 'body': {74}, 'review': {88, 74, 93}, 'alerted': {74}, 'happened': {74}, 'happens': {97, 74}, 'unhappy': {75}, 'followed': {75}, 'others': {75, 78, 87}, 'prepregnancy': {75}, 'WAY': {75}, 'pardum': {75}, 'ten': {75}, 'esteem': {75}, 'crusher': {75}, 'initially': {75}, 'pre': {75}, 'fair': {75}, 'order': {75, 94}, 'XS': {75}, 'wife': {76}, 'unfortunately': {76}, 'perchaced': {76}, 'wrong': {76, 87}, 'coment': {76}, 'chart': {76}, 'apparel': {76}, 'meaning': {76}, 'tough': {76}, 'born': {76}, 'twins': {76}, 'excited': {76}, 'elastic': {77}, 'Found': {77}, 'pretty': {77}, 'pleased': {77}, 'hooks': {77}, 'cincher': {77}, 'negative': {98, 77}, 'tend': {77}, 'cause': {77}, 'appear': {77}, 'prominent': {77}, 'underarms': {77}, 'clingy': {77}, 'looser': {77}, 'fitting': {77}, 'shirts': {77}, 'Oh': {77}, 'conspiracy': {78}, 'theorist': {78}, 'likely': {78}, 'Kurdish': {78}, 'nationalist': {78}, 'implausibly': {78}, 'supporter': {78}, 'PKK': {78}, 'Communist': {78}, 'religion': {78}, 'analysis': {78}, 'misleading': {78}, 'basically': {78}, 'runs': {78}, 'Muslims': {78}, 'banner': {78}, 'Islamism': {78}, 'seeks': {78}, 'undermine': {78}, 'Islamic': {78}, 'satisfy': {78}, 'psychological': {78}, 'needs': {78}, 'suppervised': {78}, 'proved': {78}, 'Islam': {78}, 'objective': {78}, 'scientific': {78}, 'methods': {78}, 'confirms': {78}, 'priori': {78}, 'qualifications': {78}, 'bigot': {78}, 'Another': {79}, 'disappointment': {79}, 'Higgins': {80, 79}, 'novella': {79}, 'stretched': {79}, '271': {79}, 'margins': {88, 79}, 'double': {79}, 'spaced': {79}, 'screenplay': {79}, 'treatment': {79}, 'development': {79}, 'dialogue': {79}, 'mindless': {79}, 'wholly': {79}, 'unsatisfying': {79}, 'integrity': {79}, 'placed': {95, 79}, 'Edge': {79}, 'Danger': {79}, 'dead': {79}, 'cover': {82, 79}, 'insult': {79}, 'deeply': {79}, 'discounted': {79}, 'leave': {79}, 'feeling': {79}, 'ripped': {79}, 'Go': {79}, 'local': {79}, 'library': {79}, 'morning': {79}, 'early': {79}, 'lunch': {79}, 'expect': {79}, 'appetite': {79}, 'generous': {80}, 'Jack': {80}, 'poorest': {80}, 'humble': {80}, 'belief': {80}, 'travelled': {80}, 'thro': {80}, 'harder': {80}, 'simplicity': {80}, 'Dillon': {80}, 'strolls': {80}, 'events': {80}, 'lacks': {80}, 'imagination': {80}, 'summed': {80}, 'short': {80}, 'sci': {80}, 'fi': {80}, 'afraid': {80}, 'quote': {80}, 'near': {80}, 'final': {80}, 'chapters': {80}, 'imagine': {80}, 'finale': {80}, 'Tess': {80}, 'thinks': {80}, 'Good': {81}, 'matt': {81}, 'nude': {81}, 'lipstick': {81}, 'warm': {81}, 'scent': {81}, 'vanilla': {81}, 'Texture': {81}, 'creamy': {81}, 'Meadow': {81}, 'Sweet': {81}, 'color': {81}, 'apply': {81}, 'sell': {82}, 'West': {82}, 'fairly': {82}, 'judged': {82}, 'breadth': {82}, 'nature': {82}, 'weaknesses': {82}, 'welcomed': {83}, 'frozen': {83}, 'plains': {83}, 'refreshing': {83}, 'sunwarmed': {83}, 'beautifull': {83}, 'steeps': {83}, 'Ice': {83}, 'Age': {83}, 'delightful': {83}, 'woman': {83, 87}, 'face': {88, 83}, 'overcome': {83, 95}, 'immense': {83}, 'odds': {83}, 'survive': {83}, 'moves': {83}, 'Woman': {83}, 'fresh': {83}, 'Jean': {83}, 'Auel': {83}, 'Shelters': {83}, 'Stone': {83}, 'Novel': {84}, 'begin': {84}, 'preachy': {84}, 'claw': {84}, 'wordy': {84}, 'prologue': {84}, 'actual': {84, 93}, 'novelFinally': {84}, 'Avoid': {85}, 'abridged': {85}, 'Sin': {85}, 'inevitable': {85}, 'situations': {85}, 'oh': {85}, 'women': {93, 85}, 'ya': {85}, 'Nuff': {85}, 'obnoxiously': {85}, 'sentences': {90, 85}, 'lamenting': {85}, 'sentiment': {85}, '160': {85}, 'odd': {85}, 'travesty': {85}, 'girl': {85}, 'commits': {85}, 'adultery': {92, 85, 95}, 'laments': {85}, 'stinking': {85}, 'obnoxious': {85}, 'Painfully': {85}, 'thick': {85}, 'stupid': {85}, 'piss': {85}, 'recreational': {85}, 'neighbor': {86}, 'dont': {99, 86}, 'dis': {86}, 'dat': {86}, 'gud': {86}, 'Scarlet': {96, 97, 98, 87, 92, 95}, 'Letter': {96, 97, 98, 87, 92, 95}, 'judgmental': {87}, 'tendencies': {87}, 'race': {87}, 'strove': {87}, 'gain': {87}, 'redemption': {87}, 'classics': {91, 87}, 'edition': {88, 94}, 'refers': {88}, 'ISBN': {88}, '978': {88}, '1613823613': {88}, 'explanation': {88}, 'indication': {88}, 'introductory': {88}, 'Custom': {88}, 'House': {88}, 'Admittedly': {88}, 'tedious': {88, 91}, 'skipped': {88}, 'Still': {88}, 'classroom': {88, 95}, 'addition': {88}, 'bolding': {88}, 'SAT': {88}, 'definitions': {88}, 'reviewers': {88}, 'abbreviated': {88}, 'text': {88}, 'bio': {88}, 'textbook': {88}, 'bound': {88}, 'Creepy': {89}, 'creepiest': {89}, 'creepy': {89}, 'lol': {89}, 'hands': {90}, 'erudites': {90}, 'scholars': {90}, 'audience': {90}, 'unless': {90}, 'antiquicated': {90}, 'flowery': {90}, 'prose': {90}, 'Personally': {90}, 'Painful': {91}, 'literature': {97, 91}, 'Hawthorne': {96, 91, 92}, 'writer': {91}, 'sacred': {91}, 'list': {91}, 'call': {91}, 'Perhaps': {91}, 'merit': {91}, 'name': {91, 94}, 'alone': {91}, 'Nathaniel': {92}, 'takes': {100, 92}, 'place': {92}, 'Boston': {96, 92}, 'Massachusetts': {92}, 'era': {92}, 'Puritans': {92}, 'Hester': {96, 92}, 'Prynne': {92}, 'forced': {92}, 'cheats': {92}, 'waiting': {92}, 'recaptures': {92}, 'Puritanism': {92}, 'America': {92}, 'Puritan': {92}, 'theme': {92}, 'concealed': {92}, 'guilt': {92, 95}, 'minister': {92}, 'Arthur': {92}, 'Dimmesdale': {96, 92}, 'severe': {92}, 'message': {92}, 'shouldn': {92}, 'minor': {92}, 'sin': {92}, 'haunt': {92}, 'rest': {96, 92}, 'denounces': {92}, 'religious': {92}, 'atmosphere': {92}, 'village': {92}, 'claiming': {92}, 'stifled': {92}, 'merriment': {92}, 'joy': {92}, 'Old': {92}, 'England': {97, 92}, 'picture': {92}, 'wonderful': {98, 92}, 'portrayed': {92}, 'Chaucer': {92}, 'lost': {92}, 'influence': {92}, 'Horrible': {93}, 'screechy': {93}, 'horrible': {98, 93}, 'voice': {93}, 'whatever': {93}, 'audio': {93}, 'Mistake': {94}, 'Penguin': {94}, 'five': {94}, 'grad': {94}, 'class': {97, 94}, 'important': {94}, 'proper': {94}, 'pagination': {94}, 'PAID': {94}, 'GOT': {94}, 'Dover': {94}, 'Thrift': {94}, 'called': {94}, 'distributor': {94}, 'told': {99, 94}, 'remind': {94}, 'fix': {94}, 'identify': {94}, 'asked': {94}, 'address': {94}, 'confirmation': {94}, 'spend': {94}, '15': {94}, 'already': {94}, 'Much': {95}, 'amazement': {95}, 'banned': {95}, 'lists': {95}, 'states': {95}, 'study': {97, 95}, 'devastation': {95}, 'caused': {95}, 'Although': {97, 98, 95}, 'allude': {95}, 'frequently': {95}, 'graphic': {95}, 'unsuitable': {95}, 'illnesses': {95}, 'health': {95}, 'assigned': {96}, 'Hetser': {96}, 'wearer': {96}, 'scarlet': {96, 97}, 'letter': {96, 97}, 'feels': {96}, 'everyday': {96}, 'utter': {96}, 'torment': {96}, 'weak': {96}, 'coming': {96}, 'forth': {96}, 'saying': {96}, 'slept': {96}, 'revenge': {96}, 'ridden': {96}, 'Chillingworth': {96}, 'spectactular': {96}, 'describes': {96}, 'setting': {96}, 'actions': {96}, 'truly': {96, 97}, 'outstanding': {96}, 'huge': {96}, 'flare': {96}, 'dramatic': {96}, 'Since': {96}, 'concieved': {96}, 'Pearl': {96}, 'snetenced': {96}, 'chest': {96}, 'starts': {96, 100}, 'stand': {96}, 'infront': {96}, 'town': {96}, 'badge': {96}, 'puritanical': {96}, 'soap': {97}, 'opera': {97}, 'considered': {97}, 'describe': {97}, 'harshness': {97}, 'Purtian': {97}, 'Plus': {97}, 'heavily': {97}, 'laiden': {97}, 'symbolism': {97}, 'literary': {97}, 'tools': {97}, 'occurs': {97}, 'spends': {97}, 'describing': {97}, 'prison': {97}, 'door': {97}, 'creative': {97}, 'conveying': {97}, 'recomend': {97}, 'falling': {97}, 'asleep': {97}, 'pleasure': {97}, 'circumstance': {97}, 'notice': {98}, 'contain': {98}, 'grammer': {98}, 'multiple': {98}, 'spelling': {98}, 'errors': {98}, 'respect': {98}, 'disliked': {98}, 'disagree': {98}, 'wonder': {98}, 'capitalize': {98}, 'willing': {98}, 'understanding': {98}, 'hae': {99}, 'agree': {99}, 'Possibly': {100}, 'funniest': {100}, 'placement': {100}}\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# New section"
+      ],
+      "metadata": {
+        "id": "zzvGkar6JFJG"
+      }
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Input and Information Retrieval Section "
+      ],
+      "metadata": {
+        "id": "zzww-6mXMV7g"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Single Word Search\n",
+        "\n",
+        "word=str(input(\"User Input:\")).lower()\n",
+        "\n",
+        "if word in ref:\n",
+        "  ReviewIDs=sorted(list(ref[word]))\n",
+        "  print(\"Review IDs that have the input word:\")\n",
+        "\n",
+        "  for a in ReviewIDs:\n",
+        "    print(a)\n",
+        "else:\n",
+        "  print(\"word not present in any of the reviews.\")\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "oUCvyz_KLt1o",
+        "outputId": "7c97f060-c8ed-427c-f49f-62b1f2a5bbdb"
+      },
+      "execution_count": 31,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "User Input:voo\n",
+            "word not present in any of the reviews.\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#Two Words Search\n",
+        "\n",
+        "word1=str(input(\"User Input Word1:\")).lower()\n",
+        "word2=str(input(\"User Input Word2:\")).lower()\n",
+        "\n",
+        "if word1 in ref and word2 in ref:\n",
+        "  ReviewIDs_word1=ref[word1]\n",
+        "  ReviewIDs_word2=ref[word2]\n",
+        "  ReviewIDs_combo=sorted(list(ReviewIDs_word1.intersection(ReviewIDs_word2)))\n",
+        "  print(f\"Review IDs that have the input words {word1} and {word2}:\")\n",
+        "\n",
+        "  for a in ReviewIDs_combo:\n",
+        "    print(a)\n",
+        "else:\n",
+        "  print(\"combination not present in any of the reviews.\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "SpOAeD2-LeqZ",
+        "outputId": "47f1d4c3-b0d6-4aad-f21a-28fec0cde849"
+      },
+      "execution_count": 32,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "User Input Word1:ij\n",
+            "User Input Word2:k\n",
+            "combination not present in any of the reviews.\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
